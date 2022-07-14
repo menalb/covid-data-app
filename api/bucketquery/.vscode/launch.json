@@ -1,0 +1,74 @@
+{
+    "configurations": [
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "bucketquery:CovidDataRegionQueryFunction",
+            "invokeTarget": {
+                "target": "template",
+                "templatePath": "${workspaceFolder}/template.yaml",
+                "logicalId": "CovidDataRegionQueryFunction"
+            },
+            "lambda": {
+                "payload": {
+                    "json": {
+                        "httpMethod": "GET",
+                        "queryStringParameters": {
+                            "region": "Veneto"
+                        }
+                    }
+                },
+                "environmentVariables": {
+                    "BUCKET_NAME": "menalb-bucket-sql",
+                    "REGION_FILE_NAME": "region/region_full.parquet",
+                }
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "bucketquery:CovidDataProvQueryFunction",
+            "invokeTarget": {
+                "target": "template",
+                "templatePath": "${workspaceFolder}/template.yaml",
+                "logicalId": "CovidDataProvQueryFunction"
+            },
+            "lambda": {
+                "payload": {
+                    "json": {
+                        "httpMethod": "GET",
+                        "queryStringParameters": {
+                            "prov": "PD"
+                        }
+                    }
+                },
+                "environmentVariables": {
+                    "BUCKET_NAME": "menalb-bucket-sql",
+                    "PROV_FILE_NAME": "province/province_full.parquet",
+                }
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "API bucketquery:CovidDataProvQueryFunction",
+            "invokeTarget": {
+                "target": "api",
+                "templatePath": "${workspaceFolder}/template.yaml",
+                "logicalId": "CovidDataProvQueryFunction"
+            },
+            "api": {
+                "path": "/",
+                "httpMethod": "get",
+                "payload": {
+                    "json": {
+                        "httpMethod": "GET",
+                        "queryStringParameters": {
+                            "prov": "PD"
+                        }
+                    }
+                },
+            }
+        }        
+    ]
+}
