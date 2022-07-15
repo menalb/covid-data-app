@@ -41,11 +41,34 @@ def parseDate(pars, paramName) -> str:
 
 
 def queryData(region: str, dateFrom: str) -> str:
+    query =f"""
+    SELECT 
+        data As reporting_date,
+        stato AS country,
+        codice_regione AS region_code,
+        denominazione_regione AS region,
+        ricoverati_con_sintomi AS hospitalized_with_symptoms,
+        terapia_intensiva AS intensive_care,
+        totale_ospedalizzati AS total_hospitalized,
+        isolamento_domiciliare AS home_isolation,
+        totale_positivi AS total_infected,
+        variazione_totale_positivi as delta_infected,
+        nuovi_positivi AS new_infected,
+        dimessi_guariti AS discharged_healed,
+        deceduti AS deaths,
+        casi_da_sospetto_diagnostico AS cases_suspected_screening,
+        casi_da_screening AS cases_from_screening,
+        totale_casi AS total,
+        tamponi AS swabs 
+    FROM s3object s 
+    WHERE denominazione_regione ='{region}' AND data > '{dateFrom}'
+    """
+
     resp = s3.select_object_content(
         Bucket= BucketName,
         Key=RegionFileName,
         ExpressionType='SQL',
-        Expression=f"SELECT data,stato,codice_regione,denominazione_regione,ricoverati_con_sintomi,terapia_intensiva,totale_ospedalizzati,isolamento_domiciliare,totale_positivi,variazione_totale_positivi,nuovi_positivi,dimessi_guariti,deceduti,casi_da_sospetto_diagnostico,casi_da_screening,totale_casi,tamponi FROM s3object s where denominazione_regione ='{region}' and data > '{dateFrom}'",
+        Expression=query,
         InputSerialization={'Parquet': {}, 'CompressionType': 'NONE'},
         OutputSerialization={'JSON': {}},
     )
