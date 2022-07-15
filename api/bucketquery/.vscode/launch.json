@@ -14,7 +14,8 @@
                     "json": {
                         "httpMethod": "GET",
                         "queryStringParameters": {
-                            "region": "Veneto"
+                            "region": "Veneto",
+                            "date-from":"2022-01-01"
                         }
                     }
                 },

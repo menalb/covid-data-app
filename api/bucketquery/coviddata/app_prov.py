@@ -34,7 +34,7 @@ def lambda_handler(event, context):
 
 def parseDate(pars, paramName) -> str:
     if paramName not in pars or pars[paramName] == '':
-        return (datetime.today() + relativedelta(months=-1)).strftime("%Y-%m-%d")
+        return (datetime.today() + relativedelta(months=-6)).strftime("%Y-%m-%d")
     else:
         return pars[paramName]
 

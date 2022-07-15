@@ -35,7 +35,7 @@ def lambda_handler(event, context):
 
 def parseDate(pars, paramName) -> str:
     if paramName not in pars or pars[paramName] == '':
-        return (datetime.today() + relativedelta(months=-1)).strftime("%Y-%m-%d")
+        return (datetime.today() + relativedelta(months=-6)).strftime("%Y-%m-%d")
     else:
         return pars[paramName]
 
@@ -47,17 +47,10 @@ def queryData(region: str, dateFrom: str) -> str:
         stato AS country,
         codice_regione AS region_code,
         denominazione_regione AS region,
-        ricoverati_con_sintomi AS hospitalized_with_symptoms,
-        terapia_intensiva AS intensive_care,
-        totale_ospedalizzati AS total_hospitalized,
-        isolamento_domiciliare AS home_isolation,
         totale_positivi AS total_infected,
         variazione_totale_positivi as delta_infected,
         nuovi_positivi AS new_infected,
-        dimessi_guariti AS discharged_healed,
-        deceduti AS deaths,
-        casi_da_sospetto_diagnostico AS cases_suspected_screening,
-        casi_da_screening AS cases_from_screening,
+        deceduti AS deaths,        
         totale_casi AS total,
         tamponi AS swabs 
     FROM s3object s 
