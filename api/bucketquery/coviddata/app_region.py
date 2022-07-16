@@ -16,7 +16,7 @@ def lambda_handler(event, context):
     try:
 
         if not(event['queryStringParameters']) is None and 'region' in event['queryStringParameters']:
-            region = event['queryStringParameters']['region']
+            region = event['queryStringParameters']['region'].replace(' ','-')
             dateFrom = parseDate(event['queryStringParameters'], 'date-from')
 
             message = queryData(region, dateFrom)
