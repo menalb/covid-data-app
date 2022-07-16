@@ -9,7 +9,10 @@ const Regionable: React.FC<{ regionData: RegionModel[] }> = ({ regionData }) => 
             </th>
             <th className="font-semibold text-left" >
                 Regione
-            </th>            
+            </th>
+            <th className="font-semibold text-left" >
+                Nuovi positivi
+            </th>
             <th className="font-semibold text-left" >
                 Totale positivi
             </th>
@@ -26,9 +29,12 @@ const Regionable: React.FC<{ regionData: RegionModel[] }> = ({ regionData }) => 
                 </td>
                 <td >
                     {p.region}
-                </td>                
-                < td >
-                    {p.positiveTotal}
+                </td>
+                <td>
+                    {p.newInfected}
+                </td>
+                <td>
+                    {p.infectedTotal}
                 </td>
                 < td >
                     {p.tot}

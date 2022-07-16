@@ -39,11 +39,11 @@ export const fetchProv = async (url: string) => {
 
         .then(response => {
             const mapped: ProvinceModel[] = (response as any[]).map(r => ({
-                date: new Date(Date.parse(r.data)),
-                region: r.denominazione_regione ?? '',
-                province: r.denominazione_provincia ?? '',
-                initials: r.sigla_provincia ?? '',
-                tot: r.totale_casi ?? 0
+                date: new Date(Date.parse(r.reporting_date)),
+                region: r.region ?? '',
+                province: r.province ?? '',
+                initials: r.province_initials ?? '',
+                tot: r.total ?? 0
             }));
             return mapped;
         });

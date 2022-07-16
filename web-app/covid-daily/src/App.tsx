@@ -12,18 +12,13 @@ function App() {
   return (
     <div>
       <header>
-
-
-      </header>
-      <main className="container mx-auto">
         <div className="container mx-auto bg-gray-200 rounded-xl shadow border p-8 m-10">
           <p className="text-3xl text-gray-700 font-bold mb-5">
-            Welcome!
-          </p>
-          <p className="text-gray-500 text-lg">
             COVID  Data
           </p>
         </div>
+      </header>
+      <main className="container mx-auto">        
         <QueryClientProvider client={queryClient}>
           <IndexPage />
         </QueryClientProvider>
