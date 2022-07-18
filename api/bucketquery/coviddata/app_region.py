@@ -34,19 +34,27 @@ def lambda_handler(event, context):
 def queryData(region: str, dateFrom: str) -> str:
     query =f"""
     SELECT 
-        data As reporting_date,
-        stato AS country,
-        codice_regione AS region_code,
-        denominazione_regione AS region,
-        totale_positivi AS total_infected,
-        variazione_totale_positivi as delta_infected,
-        nuovi_positivi AS new_infected,
-        dimessi_guariti AS discharged_healed,
-        deceduti AS deaths,
-        totale_casi AS total,
-        tamponi AS swabs 
+        reporting_date,
+        country,
+        region_code,
+        region,
+        total_infected,
+        delta_infected,
+        new_infected,
+        discharged_healed,
+        deaths,
+        total,
+        swabs, 
+
+        total_infected_prev,
+        delta_infected_prev,
+        new_infected_prev,
+        discharged_healed_prev,
+        deaths_prev,
+        total_prev,
+        swabs_prev
     FROM s3object s 
-    WHERE denominazione_regione ='{region}' AND data > '{dateFrom}'
+    WHERE region ='{region}' AND reporting_date > '{dateFrom}'
     """
 
     return s3Query(s3, query, BucketName, FileName)

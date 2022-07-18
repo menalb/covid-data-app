@@ -21,7 +21,7 @@
                 },
                 "environmentVariables": {
                     "BUCKET_NAME": "menalb-bucket-sql",
-                    "REGION_FILE_NAME": "region/region_full.parquet",
+                    "REGION_FILE_NAME": "region/region_compare_full.parquet",
                 }
             }
         },
