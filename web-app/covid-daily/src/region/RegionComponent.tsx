@@ -34,6 +34,7 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
         date: d.date.toDateString(),
         delta: d.deltaInfected,
         newInfected: d.newInfected,
+        newInfectedPrev: d.newInfectedPrevYear,
         healed: d.dischargedHealed,
         total: d.totalInfected
     }));
@@ -43,6 +44,20 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
 
             return <text x={x + width / 2} y={y} fill="#666" textAnchor="middle" dy={-6}>{value > 0 ? value : ''}</text>;
         };
+
+    const renderLegend = (props:any) => {
+        const { payload } = props;
+
+        return (
+            <ul>
+                {
+                    (payload as any[]).map((entry, index) => (
+                        <li key={`item-${index}`}>{entry.value}</li>
+                    ))
+                }
+            </ul>
+        );
+    }
 
     return (
         <>
@@ -65,30 +80,29 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
 
             {data && <>
                 <h3 className="font-bold mb-5">Nuovi casi</h3>
-                <BarChart
-                    width={800}
+                <ComposedChart width={800}
                     height={500}
-                    data={chartData()}
                     margin={{
                         top: 20,
                         right: 20,
                         bottom: 10,
                         left: 0,
                     }}
-                >
-
+                    data={chartData()}>
                     <CartesianGrid stroke="#f5f5f5" />
                     <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
                     <YAxis />
                     <Tooltip />
-                    <Legend />
-                    <Bar dataKey="newInfected" fill="#413ea0" />
-                </BarChart>
+                    <Legend verticalAlign="top" />
+                    <Bar name="Anno corrente"  dataKey="newInfected" fill="#413ea0" />
+                    <Line name="Anno precedente" type="monotone" dataKey="newInfectedPrev" stroke="#ff7300" />
+
+                </ComposedChart>
 
 
                 <h3 className="font-bold mb-5">Guarigioni</h3>
                 <LineChart data={chartData()} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
-                    <Line type="monotone" dataKey="healed" stroke="#ff7300" />
+                    <Line type="monotone" dataKey="healed" stroke="#1d8102" />
                     <YAxis type="number" dataKey="healed" />
                     <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />
                     <Tooltip />

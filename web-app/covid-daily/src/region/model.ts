@@ -11,6 +11,7 @@ export interface RegionModel {
     deltaInfected?: number;
     intensiveCare?: number;
     newInfected?: number;
+    newInfectedPrevYear?: number;
     deaths?: number;
     dischargedHealed?: number;
     casesFromScreening?: number;

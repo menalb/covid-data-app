@@ -21,6 +21,7 @@ export const fetchRegion = async (url: string) => {
                 deltaInfected: r.delta_infected,
                 intensiveCare: r.intensive_care,
                 newInfected: r.new_infected,
+                newInfectedPrevYear: r.new_infected_prev,
                 deaths: r.deaths,
                 dischargedHealed: r.discharged_healed,
                 casesFromScreening: r.cases_from_screening,
