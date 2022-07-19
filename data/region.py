@@ -52,8 +52,8 @@ result_20 = buildYearData(d_data,2020)
 
 result = pd.concat([result_22,result_21,result_20])
 
-print(result.head().to_string())
+# print(result.head().to_string())
 
-result.to_csv('result.csv')
+result.to_csv('region_compare_full.csv')
 
 result.to_parquet('region_compare_full.parquet')
