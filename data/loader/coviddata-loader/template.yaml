@@ -27,6 +27,8 @@ Resources:
       CodeUri: coviddata_loader/
       Handler: app.lambda_handler
       Runtime: python3.8
+      MemorySize: 512
+      Timeout: 20
       Environment:
         Variables:
             DOWNLOAD_FILE_NAME: !Ref DownloadFileName
