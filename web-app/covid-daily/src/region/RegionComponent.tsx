@@ -36,7 +36,12 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
         newInfected: d.newInfected,
         newInfectedPrev: d.newInfectedPrevYear,
         healed: d.dischargedHealed,
-        total: d.totalInfected
+        total: d.totalInfected,
+        infectedPrev: d.infectedPrevYear,
+        swabs: d.swabs,
+        swabsPrev: d.swabsPrevYear,
+        deaths: d.deaths,
+        deathsPrev: d.deathsPrevYear
     }));
 
     const renderCustomBarLabel: (args: { x: number, y: number, width: number, height: number, value: number }) => JSX.Element =
@@ -45,7 +50,7 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
             return <text x={x + width / 2} y={y} fill="#666" textAnchor="middle" dy={-6}>{value > 0 ? value : ''}</text>;
         };
 
-    const renderLegend = (props:any) => {
+    const renderLegend = (props: any) => {
         const { payload } = props;
 
         return (
@@ -94,8 +99,47 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                     <YAxis />
                     <Tooltip />
                     <Legend verticalAlign="top" />
-                    <Bar name="Anno corrente"  dataKey="newInfected" fill="#413ea0" />
+                    <Bar name="Anno corrente" dataKey="newInfected" fill="#413ea0" />
                     <Line name="Anno precedente" type="monotone" dataKey="newInfectedPrev" stroke="#ff7300" />
+
+                </ComposedChart>
+
+                <h3 className="font-bold mb-5">Infezioni</h3>
+                <ComposedChart width={800}
+                    height={500}
+                    margin={{
+                        top: 20,
+                        right: 20,
+                        bottom: 10,
+                        left: 0,
+                    }}
+                    data={chartData()}>
+                    <Line type="monotone" dataKey="total" stroke="red" />
+                    <YAxis type="number" dataKey="total" />
+                    <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />
+                    <Tooltip />
+                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                    <Line name="Anno precedente" type="monotone" dataKey="totalPrev" stroke="#ff7300" />
+                    <Line name="Anno precedente" type="monotone" dataKey="infectedPrev" stroke="#ff7300" />
+                </ComposedChart>
+
+                <h3 className="font-bold mb-5">Tamponi</h3>
+                <ComposedChart width={800}
+                    height={500}
+                    margin={{
+                        top: 20,
+                        right: 20,
+                        bottom: 10,
+                        left: 30,
+                    }}
+                    data={chartData()}>
+                    <CartesianGrid stroke="#f5f5f5" />
+                    <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend verticalAlign="top" />
+                    <Line name="Anno corrente" dataKey="swabs" fill="#413ea0" />
+                    <Line name="Anno precedente" type="monotone" dataKey="swabsPrev" stroke="#ff7300" />
 
                 </ComposedChart>
 
@@ -109,6 +153,26 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                     <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                 </LineChart>
 
+                <h3 className="font-bold mb-5">Morti</h3>
+                <ComposedChart width={800}
+                    height={500}
+                    margin={{
+                        top: 20,
+                        right: 20,
+                        bottom: 10,
+                        left: 0,
+                    }}
+                    data={chartData()}>
+                    <CartesianGrid stroke="#f5f5f5" />
+                    <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend verticalAlign="top" />
+                    <Line name="Anno corrente" dataKey="deaths" fill="#413ea0" />
+                    <Line name="Anno precedente" type="monotone" dataKey="deathsPrev" stroke="#ff7300" />
+
+                </ComposedChart>
+
                 <h3 className="font-bold mb-5">Totale casi</h3>
                 <LineChart data={chartData()} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
                     <Line type="monotone" dataKey="total" stroke="red" />
@@ -117,6 +181,7 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                     <Tooltip />
                     <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                 </LineChart>
+
             </>
             }
 
