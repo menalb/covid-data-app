@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "coviddata-loader:CovidDataLoaderFunction",
+            "invokeTarget": {
+                "target": "template",
+                "templatePath": "${workspaceFolder}/template.yaml",
+                "logicalId": "CovidDataLoaderFunction"
+            },
+            "lambda": {
+                "payload": {},
+                "environmentVariables": {
+                    "DOWNLOAD_FILE_NAME": "dpc-covid19-ita-regioni.csv",
+                    "FILE_URL": "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv",
+                    "BUCKET_NAME": "menalb-bucket-sql",
+                    "REGION_FILE_NAME": "region_compare_full",
+
+                }
+            }
+        }
+    ]
+}

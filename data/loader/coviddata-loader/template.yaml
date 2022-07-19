@@ -38,6 +38,11 @@ Resources:
       Policies: 
         - S3WritePolicy:
             BucketName: !Ref CovidDataBucketName
+      Events:
+        InvocationLevel:
+          Type: Schedule
+          Properties: 
+            Schedule: cron(10 17 * * ? *)
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
