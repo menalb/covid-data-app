@@ -1,4 +1,4 @@
-from utils import parseDate, s3Query
+from utils import parseDate, checkDateFromNotTooBig, checkDateInTheFuture, s3Query
 from http_response import okResponse, badRequestResponse
 from datetime import datetime
 from typing import Union
@@ -9,7 +9,7 @@ import boto3
 
 BucketName = os.environ.get('BUCKET_NAME')
 FileName = os.environ.get('REGION_FILE_NAME')
-
+maxMonths = 5
 s3 = boto3.client('s3')
 
 def lambda_handler(event, context):
@@ -18,6 +18,12 @@ def lambda_handler(event, context):
         if not(event['queryStringParameters']) is None and 'region' in event['queryStringParameters']:
             region = event['queryStringParameters']['region'].replace(' ','-')
             dateFrom = parseDate(event['queryStringParameters'], 'date-from')
+
+            if not checkDateFromNotTooBig(maxMonths, dateFrom):
+                return badRequestResponse(f'date-from should be max {maxMonths} months in the past')
+                
+            if checkDateInTheFuture(dateFrom) :
+                return badRequestResponse(f'date-from should not be in the future')
 
             message = queryData(region, dateFrom)
 
