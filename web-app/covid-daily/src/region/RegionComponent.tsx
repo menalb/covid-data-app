@@ -132,7 +132,6 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
             </ul>
             {data && <>
                 {tab === 'newInfected' && <section>
-                    <h3 className="font-bold mb-5">Nuovi casi</h3>
                     <ComposedChart width={800}
                         height={500}
                         margin={{
@@ -153,14 +152,13 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                     </ComposedChart>
                 </section>}
 
-                {tab === 'Infections' && <section>
-                <h3 className="font-bold mb-5">Infezioni</h3>
+                {tab === 'Infections' && <section>                
                 <ComposedChart width={800}
                     height={500}
                     margin={{
-                        top: 20,
+                        top: 0,
                         right: 20,
-                        bottom: 10,
+                        bottom: 60,
                         left: 0,
                     }}
                     data={chartData}>
@@ -175,7 +173,6 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                 </section>}
 
                 {tab === 'Swabs' && <section>
-                <h3 className="font-bold mb-5">Tamponi</h3>
                 <ComposedChart width={800}
                     height={500}
                     margin={{
@@ -198,7 +195,6 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
 
 
                 {tab === 'Healed' && <section>
-                    <h3 className="font-bold mb-5">Guarigioni</h3>
                     <LineChart data={chartData} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
                         <Line type="monotone" dataKey="healed" stroke="#1d8102" />
                         <YAxis type="number" dataKey="healed" />
@@ -209,7 +205,6 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                 </section>}
 
                 {tab === 'Deaths' && <section>
-                    <h3 className="font-bold mb-5">Morti</h3>
                     <ComposedChart width={800}
                         height={500}
                         margin={{
@@ -231,7 +226,6 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                 </section>}
 
                 {tab === 'Total' && <section>
-                    <h3 className="font-bold mb-5">Totale casi</h3>
                     <LineChart data={chartData} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
                         <Line type="monotone" dataKey="total" stroke="red" />
                         <YAxis type="number" dataKey="total" />
