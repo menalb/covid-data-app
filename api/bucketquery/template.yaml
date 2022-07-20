@@ -19,6 +19,18 @@ Globals:
     Timeout: 3
 
 Resources:
+  CovidDataApi:
+    Type: 'AWS::Serverless::Api'
+    Properties:
+      OpenApiVersion: 3.0.3
+      Name: CovidDataApi
+      StageName: Prod
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+          ThrottlingBurstLimit: 40
+          ThrottlingRateLimit: 30
+
   CovidDataProvQueryFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -38,6 +50,8 @@ Resources:
           Properties:
             Path: /covid-data/prov
             Method: get
+            RestApiId: !Ref CovidDataApi
+
     
   CovidDataRegionQueryFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -58,6 +72,7 @@ Resources:
           Properties:
             Path: /covid-data/region
             Method: get
+            RestApiId: !Ref CovidDataApi
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -65,7 +80,7 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   CovidDataApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/covid-data/"
+    Value: !Sub "https://${CovidDataApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/covid-data/"
   CovidDataProvQueryFunction:
     Description: "Covid Data Province Lambda Function ARN"
     Value: !GetAtt CovidDataProvQueryFunction.Arn
