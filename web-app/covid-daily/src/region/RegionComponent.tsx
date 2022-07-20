@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { Area, Bar, BarChart, CartesianGrid, ComposedChart, Legend, Line, LineChart, Scatter, Tooltip, XAxis, YAxis } from "recharts";
 import { defaultDateFrom } from "../date-utils";
@@ -28,8 +28,7 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
         refetch();
     }, [regionUrl]);
 
-
-    const chartData = () => data?.map(d =>
+    const buildChartData = () => data?.map(d =>
     ({
         date: d.date.toDateString(),
         delta: d.deltaInfected,
@@ -43,6 +42,8 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
         deaths: d.deaths,
         deathsPrev: d.deathsPrevYear
     }));
+
+    const chartData = useMemo(() => buildChartData(), [data]);
 
     const renderCustomBarLabel: (args: { x: number, y: number, width: number, height: number, value: number }) => JSX.Element =
         ({ x, y, width, height, value }) => {
@@ -93,7 +94,7 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                         bottom: 10,
                         left: 0,
                     }}
-                    data={chartData()}>
+                    data={chartData}>
                     <CartesianGrid stroke="#f5f5f5" />
                     <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
                     <YAxis />
@@ -113,7 +114,7 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                         bottom: 10,
                         left: 0,
                     }}
-                    data={chartData()}>
+                    data={chartData}>
                     <Line type="monotone" dataKey="total" stroke="red" />
                     <YAxis type="number" dataKey="total" />
                     <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />
@@ -132,7 +133,7 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                         bottom: 10,
                         left: 30,
                     }}
-                    data={chartData()}>
+                    data={chartData}>
                     <CartesianGrid stroke="#f5f5f5" />
                     <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
                     <YAxis />
@@ -145,7 +146,7 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
 
 
                 <h3 className="font-bold mb-5">Guarigioni</h3>
-                <LineChart data={chartData()} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
+                <LineChart data={chartData} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
                     <Line type="monotone" dataKey="healed" stroke="#1d8102" />
                     <YAxis type="number" dataKey="healed" />
                     <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />
@@ -162,7 +163,7 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                         bottom: 10,
                         left: 0,
                     }}
-                    data={chartData()}>
+                    data={chartData}>
                     <CartesianGrid stroke="#f5f5f5" />
                     <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
                     <YAxis />
@@ -174,7 +175,7 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                 </ComposedChart>
 
                 <h3 className="font-bold mb-5">Totale casi</h3>
-                <LineChart data={chartData()} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
+                <LineChart data={chartData} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
                     <Line type="monotone" dataKey="total" stroke="red" />
                     <YAxis type="number" dataKey="total" />
                     <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ServiceStatus } from "../models";
 import { ProvinceModel } from "./model";
 

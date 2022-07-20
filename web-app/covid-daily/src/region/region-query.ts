@@ -1,12 +1,9 @@
 import { RegionModel } from "./model";
 
 export const fetchRegion = async (url: string) => {
-
-    console.log(url)
     const res = await fetch(url).then(response =>
 
         response.json())
-
         .then(response => {
             const mapped: RegionModel[] = (response as any[]).map(r => ({
                 date: new Date(Date.parse(r.reporting_date)),
