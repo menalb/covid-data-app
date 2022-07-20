@@ -4,13 +4,13 @@ import { Area, Bar, BarChart, CartesianGrid, ComposedChart, Legend, Line, LineCh
 import { defaultDateFrom } from "../date-utils";
 import { RegionModel } from "./model";
 import { fetchRegion } from "./region-query";
-import RegionTable from "./region-table";
 
 const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
 
     const [searchText, setSearchText] = useState('Veneto');
     const [dateFrom, setDateFrom] = useState(defaultDateFrom);
     const [regionUrl, setRegionUrl] = useState(`region=Veneto&date-from=${dateFrom}`);
+    const [tab, setTab] = useState('newInfected');
 
     const { isLoading, error, data, refetch } = useQuery<RegionModel[], Error>(
         "region",
@@ -65,6 +65,9 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
         );
     }
 
+    const activeTabCss = "inline-block bg-gray-100 text-blue-600 rounded-t-lg py-4 px-4 text-sm font-medium text-center active";
+    const inactiveTabCss = "inline-block text-gray-500 hover:text-gray-600 hover:bg-gray-50 rounded-t-lg py-4 px-4 text-sm font-medium text-center";
+
     return (
         <>
             <form onSubmit={search} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -83,28 +86,74 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
             </form>
             {isLoading && <p>Loading ...</p>}
             {error && <em>{error.message}</em>}
-
+            <ul className="flex flex-wrap border-b border-gray-200">
+                <li className="mr-2">
+                    <a href="#" onClick={() => setTab('newInfected')}
+                        aria-current={tab === 'newInfected' ? 'page' : false}
+                        className={tab === 'newInfected' ? activeTabCss : inactiveTabCss}>
+                        Nuovi casi
+                    </a>
+                </li>
+                <li className="mr-2">
+                    <a href="#" onClick={() => setTab('Infections')}
+                        aria-current={tab === 'Infections' ? 'page' : false}
+                        className={tab === 'Infections' ? activeTabCss : inactiveTabCss}>
+                        Infezioni
+                    </a>
+                </li>
+                <li className="mr-2">
+                    <a href="#" onClick={() => setTab('Swabs')}
+                        aria-current={tab === 'Swabs' ? 'page' : false}
+                        className={tab === 'Swabs' ? activeTabCss : inactiveTabCss}>
+                        Tamponi
+                    </a>
+                </li>
+                <li className="mr-2">
+                    <a href="#" onClick={() => setTab('Healed')}
+                        aria-current={tab === 'Healed' ? 'page' : false}
+                        className={tab === 'Healed' ? activeTabCss : inactiveTabCss}>
+                        Guarigioni
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onClick={() => setTab('Deaths')}
+                        aria-current={tab === 'Deaths' ? 'page' : false}
+                        className={tab === 'Deaths' ? activeTabCss : inactiveTabCss}>
+                        Decessi
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onClick={() => setTab('Total')}
+                        aria-current={tab === 'Total' ? 'page' : false}
+                        className={tab === 'Total' ? activeTabCss : inactiveTabCss}>
+                        Totale casi
+                    </a>
+                </li>
+            </ul>
             {data && <>
-                <h3 className="font-bold mb-5">Nuovi casi</h3>
-                <ComposedChart width={800}
-                    height={500}
-                    margin={{
-                        top: 20,
-                        right: 20,
-                        bottom: 10,
-                        left: 0,
-                    }}
-                    data={chartData}>
-                    <CartesianGrid stroke="#f5f5f5" />
-                    <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend verticalAlign="top" />
-                    <Bar name="Anno corrente" dataKey="newInfected" fill="#413ea0" />
-                    <Line name="Anno precedente" type="monotone" dataKey="newInfectedPrev" stroke="#ff7300" />
+                {tab === 'newInfected' && <section>
+                    <h3 className="font-bold mb-5">Nuovi casi</h3>
+                    <ComposedChart width={800}
+                        height={500}
+                        margin={{
+                            top: 20,
+                            right: 20,
+                            bottom: 10,
+                            left: 0,
+                        }}
+                        data={chartData}>
+                        <CartesianGrid stroke="#f5f5f5" />
+                        <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend verticalAlign="top" />
+                        <Bar name="Anno corrente" dataKey="newInfected" fill="#413ea0" />
+                        <Line name="Anno precedente" type="monotone" dataKey="newInfectedPrev" stroke="#ff7300" />
 
-                </ComposedChart>
+                    </ComposedChart>
+                </section>}
 
+                {tab === 'Infections' && <section>
                 <h3 className="font-bold mb-5">Infezioni</h3>
                 <ComposedChart width={800}
                     height={500}
@@ -122,8 +171,10 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                     <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                     <Line name="Anno precedente" type="monotone" dataKey="totalPrev" stroke="#ff7300" />
                     <Line name="Anno precedente" type="monotone" dataKey="infectedPrev" stroke="#ff7300" />
-                </ComposedChart>
+                    </ComposedChart>
+                </section>}
 
+                {tab === 'Swabs' && <section>
                 <h3 className="font-bold mb-5">Tamponi</h3>
                 <ComposedChart width={800}
                     height={500}
@@ -142,46 +193,53 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                     <Line name="Anno corrente" dataKey="swabs" fill="#413ea0" />
                     <Line name="Anno precedente" type="monotone" dataKey="swabsPrev" stroke="#ff7300" />
 
-                </ComposedChart>
+                    </ComposedChart>
+                </section>}
 
 
-                <h3 className="font-bold mb-5">Guarigioni</h3>
-                <LineChart data={chartData} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
-                    <Line type="monotone" dataKey="healed" stroke="#1d8102" />
-                    <YAxis type="number" dataKey="healed" />
-                    <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />
-                    <Tooltip />
-                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                </LineChart>
+                {tab === 'Healed' && <section>
+                    <h3 className="font-bold mb-5">Guarigioni</h3>
+                    <LineChart data={chartData} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
+                        <Line type="monotone" dataKey="healed" stroke="#1d8102" />
+                        <YAxis type="number" dataKey="healed" />
+                        <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />
+                        <Tooltip />
+                        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                    </LineChart>
+                </section>}
 
-                <h3 className="font-bold mb-5">Morti</h3>
-                <ComposedChart width={800}
-                    height={500}
-                    margin={{
-                        top: 20,
-                        right: 20,
-                        bottom: 10,
-                        left: 0,
-                    }}
-                    data={chartData}>
-                    <CartesianGrid stroke="#f5f5f5" />
-                    <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend verticalAlign="top" />
-                    <Line name="Anno corrente" dataKey="deaths" fill="#413ea0" />
-                    <Line name="Anno precedente" type="monotone" dataKey="deathsPrev" stroke="#ff7300" />
+                {tab === 'Deaths' && <section>
+                    <h3 className="font-bold mb-5">Morti</h3>
+                    <ComposedChart width={800}
+                        height={500}
+                        margin={{
+                            top: 20,
+                            right: 20,
+                            bottom: 10,
+                            left: 0,
+                        }}
+                        data={chartData}>
+                        <CartesianGrid stroke="#f5f5f5" />
+                        <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend verticalAlign="top" />
+                        <Line name="Anno corrente" dataKey="deaths" fill="#413ea0" />
+                        <Line name="Anno precedente" type="monotone" dataKey="deathsPrev" stroke="#ff7300" />
 
-                </ComposedChart>
+                    </ComposedChart>
+                </section>}
 
-                <h3 className="font-bold mb-5">Totale casi</h3>
-                <LineChart data={chartData} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
-                    <Line type="monotone" dataKey="total" stroke="red" />
-                    <YAxis type="number" dataKey="total" />
-                    <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />
-                    <Tooltip />
-                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                </LineChart>
+                {tab === 'Total' && <section>
+                    <h3 className="font-bold mb-5">Totale casi</h3>
+                    <LineChart data={chartData} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
+                        <Line type="monotone" dataKey="total" stroke="red" />
+                        <YAxis type="number" dataKey="total" />
+                        <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />
+                        <Tooltip />
+                        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                    </LineChart>
+                </section>}
 
             </>
             }
