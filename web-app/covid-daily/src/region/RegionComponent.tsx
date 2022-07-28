@@ -2,8 +2,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { Area, Bar, BarChart, CartesianGrid, ComposedChart, Legend, Line, LineChart, Scatter, Tooltip, XAxis, YAxis } from "recharts";
 import { defaultDateFrom } from "../date-utils";
+import { CustomizedAxisTick } from "../CustomizedAxisTick";
 import { RegionModel } from "./model";
+import NewInfectionsChart from "./NewInfectionsChart";
 import { fetchRegion } from "./region-query";
+import InfectionsChart from "./InfectionsChart";
+import HealedChart from "./HealedChart";
+import SwabsChart from "./SwabsChart";
+import DeathsChart from "./DeathsChart";
+import TotalChart from "./TotalChart";
 
 const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
 
@@ -130,109 +137,30 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
                     </a>
                 </li>
             </ul>
-            {data && <>
+            {chartData && <>
                 {tab === 'newInfected' && <section>
-                    <ComposedChart width={800}
-                        height={500}
-                        margin={{
-                            top: 20,
-                            right: 20,
-                            bottom: 10,
-                            left: 0,
-                        }}
-                        data={chartData}>
-                        <CartesianGrid stroke="#f5f5f5" />
-                        <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend verticalAlign="top" />
-                        <Bar name="Anno corrente" dataKey="newInfected" fill="#413ea0" />
-                        <Line name="Anno precedente" type="monotone" dataKey="newInfectedPrev" stroke="#ff7300" />
-
-                    </ComposedChart>
+                    <NewInfectionsChart chartData={chartData} />
                 </section>}
 
-                {tab === 'Infections' && <section>                
-                <ComposedChart width={800}
-                    height={500}
-                    margin={{
-                        top: 0,
-                        right: 20,
-                        bottom: 60,
-                        left: 0,
-                    }}
-                    data={chartData}>
-                    <Line type="monotone" dataKey="total" stroke="red" />
-                    <YAxis type="number" dataKey="total" />
-                    <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />
-                    <Tooltip />
-                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                    <Line name="Anno precedente" type="monotone" dataKey="totalPrev" stroke="#ff7300" />
-                    <Line name="Anno precedente" type="monotone" dataKey="infectedPrev" stroke="#ff7300" />
-                    </ComposedChart>
+                {tab === 'Infections' && <section>
+                    <InfectionsChart chartData={chartData} />
                 </section>}
 
                 {tab === 'Swabs' && <section>
-                <ComposedChart width={800}
-                    height={500}
-                    margin={{
-                        top: 20,
-                        right: 20,
-                        bottom: 10,
-                        left: 30,
-                    }}
-                    data={chartData}>
-                    <CartesianGrid stroke="#f5f5f5" />
-                    <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend verticalAlign="top" />
-                    <Line name="Anno corrente" dataKey="swabs" fill="#413ea0" />
-                    <Line name="Anno precedente" type="monotone" dataKey="swabsPrev" stroke="#ff7300" />
-
-                    </ComposedChart>
+                    <SwabsChart chartData={chartData} />
                 </section>}
 
 
                 {tab === 'Healed' && <section>
-                    <LineChart data={chartData} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
-                        <Line type="monotone" dataKey="healed" stroke="#1d8102" />
-                        <YAxis type="number" dataKey="healed" />
-                        <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />
-                        <Tooltip />
-                        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                    </LineChart>
+                    <HealedChart chartData={chartData} />
                 </section>}
 
                 {tab === 'Deaths' && <section>
-                    <ComposedChart width={800}
-                        height={500}
-                        margin={{
-                            top: 20,
-                            right: 20,
-                            bottom: 10,
-                            left: 0,
-                        }}
-                        data={chartData}>
-                        <CartesianGrid stroke="#f5f5f5" />
-                        <XAxis type="category" dataKey="date" height={80} tick={<CustomizedAxisTick />} />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend verticalAlign="top" />
-                        <Line name="Anno corrente" dataKey="deaths" fill="#413ea0" />
-                        <Line name="Anno precedente" type="monotone" dataKey="deathsPrev" stroke="#ff7300" />
-
-                    </ComposedChart>
+                    <DeathsChart chartData={chartData} />
                 </section>}
 
                 {tab === 'Total' && <section>
-                    <LineChart data={chartData} width={800} height={350} margin={{ top: 20, right: 10, left: 10, bottom: 60 }}>
-                        <Line type="monotone" dataKey="total" stroke="red" />
-                        <YAxis type="number" dataKey="total" />
-                        <XAxis type="category" dataKey="date" tick={<CustomizedAxisTick />} />
-                        <Tooltip />
-                        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                    </LineChart>
+                   <TotalChart chartData={chartData} />
                 </section>}
 
             </>
@@ -244,24 +172,5 @@ const RegionComponent: React.FC<{ apiURL: string }> = ({ apiURL }) => {
         </>
     )
 }
-
-const CustomizedAxisTick: React.FC<any> = (props: any) => {
-    const { x, y, payload } = props;
-
-    return (
-        <g transform={`translate(${x}, ${y})`}>
-            <text
-                x={0}
-                y={0}
-                dy={16}
-                textAnchor="end"
-                fill="#666"
-                transform="rotate(-35)"
-            >
-                {payload.value}
-            </text>
-        </g>
-    );
-};
 
 export default RegionComponent;
